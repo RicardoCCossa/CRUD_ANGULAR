@@ -1,7 +1,0 @@
-[
-  { "_id": "1", "name": "Angular Básico", "category": "Front-End" },
-  { "_id": "2", "name": "Java com Spring Boot", "category": "Back-End" },
-  { "_id": "3", "name": "Python Django", "category": "Back-End" },
-  { "_id": "4", "name": "HTML & CSS", "category": "Front-End" },
-  { "_id": "5", "name": "Banco de Dados MySQL", "category": "Database" }
-]

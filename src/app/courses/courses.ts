@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared-module';
 
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { Course } from './model/course';
 import { CoursesServices } from './services/courses-services';
 
@@ -18,11 +20,19 @@ import { CoursesServices } from './services/courses-services';
 })
 
 export class CoursesComponent {
-  displayedColumns = ['name', 'category'];
-  courses: Observable<Course[]>;
+  displayedColumns = ['name', 'category', 'actions'];
+  courses$: Observable<Course[]>;
 
-  constructor(private coursesServices: CoursesServices) {
-    this.courses = this.coursesServices.list();
+  constructor(
+    private coursesServices: CoursesServices,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.courses$ = this.coursesServices.list();
+  }
+
+  onAdd() {
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 }
 

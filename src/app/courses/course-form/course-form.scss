@@ -1,0 +1,16 @@
+/* course-form.component.scss */
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.card-container {
+  max-width: 600px; /* ou a largura que preferir */
+  margin: 2em auto;
+  padding: 10px;
+}
+
+mat-card-content {
+    padding-top: 20px;
+}

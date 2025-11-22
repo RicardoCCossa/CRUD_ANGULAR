@@ -10,10 +10,14 @@ import { Observable } from 'rxjs';
 export class CoursesServices {
   constructor(private http: HttpClient) {}
 
-  private readonly API = '/public/assets/courses.json';
+  private readonly API = '/api/courses';
 
 
  list(): Observable<Course[]> {
     return this.http.get<Course[]>(this.API);
+  }
+
+  save(recorde: Course) {
+    return this.http.post<Course>(this.API, recorde);
   }
 }
