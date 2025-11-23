@@ -7,7 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Course } from './model/course';
 import { CoursesServices } from './services/courses-services';
-import { error } from 'node:console';
+
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialog } from '../shared/components/error-dialog/error-dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { CategoryPipe } from '../shared/pipes/category-pipe';
 
 @Component({
   selector: 'app-courses',
@@ -15,6 +19,8 @@ import { error } from 'node:console';
   imports: [
     CommonModule,
     SharedModule,
+    MatIconModule,
+    CategoryPipe
   ],
   templateUrl: './courses.html',
   styleUrls: ['./courses.scss'],
@@ -27,15 +33,23 @@ export class CoursesComponent {
   constructor(
     private coursesServices: CoursesServices,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dialog: MatDialog
   ) {
     this.courses$ = this.coursesServices.list().pipe(
       catchError(error => {
+        this.onError('Erro ao carregar cursos.');
         return of([])
       })
     );
   }
 
+  onError(errorMsg: string) {
+    this.dialog.open(ErrorDialog, {
+      // É aqui que passamos os dados para o Dialog:
+      data: errorMsg
+    });
+  }
   onAdd() {
     this.router.navigate(['new'], { relativeTo: this.route });
   }
