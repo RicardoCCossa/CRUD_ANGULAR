@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared/shared-module';
@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Course } from './model/course';
 import { CoursesServices } from './services/courses-services';
+import { error } from 'node:console';
 
 @Component({
   selector: 'app-courses',
@@ -28,7 +29,11 @@ export class CoursesComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.courses$ = this.coursesServices.list();
+    this.courses$ = this.coursesServices.list().pipe(
+      catchError(error => {
+        return of([])
+      })
+    );
   }
 
   onAdd() {
