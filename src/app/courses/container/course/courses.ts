@@ -1,17 +1,18 @@
 import { catchError, Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared/shared-module';
+import { SharedModule } from '../../../shared/shared-module';
 
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Course } from './model/course';
-import { CoursesServices } from './services/courses-services';
+import { Course } from '../../model/course';
+import { CoursesServices } from '../../services/courses-services';
 
 import { MatDialog } from '@angular/material/dialog';
-import { ErrorDialog } from '../shared/components/error-dialog/error-dialog';
+import { ErrorDialog } from '../../../shared/components/error-dialog/error-dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { CategoryPipe } from '../shared/pipes/category-pipe';
+import { CoursesList } from '../../componentes/courses-list/courses-list';
+
 
 @Component({
   selector: 'app-courses',
@@ -20,15 +21,18 @@ import { CategoryPipe } from '../shared/pipes/category-pipe';
     CommonModule,
     SharedModule,
     MatIconModule,
-    CategoryPipe
-  ],
+    CoursesList
+],
   templateUrl: './courses.html',
   styleUrls: ['./courses.scss'],
 })
 
 export class CoursesComponent {
-  displayedColumns = ['name', 'category', 'actions'];
+
+
   courses$: Observable<Course[]>;
+
+  loading = true;
 
   constructor(
     private coursesServices: CoursesServices,
@@ -50,8 +54,13 @@ export class CoursesComponent {
       data: errorMsg
     });
   }
+
   onAdd() {
     this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  onEdit(course: Course) {
+    this.router.navigate(['edit', course._id], { relativeTo: this.route });
   }
 }
 
