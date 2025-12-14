@@ -35,4 +35,8 @@ export class CoursesServices {
   private update(record: Partial<Course>) {
       return this.http.put<Course>(`${this.API}/${record._id}`, record).pipe(first());
   }
+
+  remove(id: string) {
+      return this.http.delete(`${this.API}/${id}`).pipe(first());
+  }
 }

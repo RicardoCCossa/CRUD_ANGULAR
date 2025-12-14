@@ -12,6 +12,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ErrorDialog } from '../../../shared/components/error-dialog/error-dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { CoursesList } from '../../componentes/courses-list/courses-list';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 @Component({
@@ -30,7 +32,7 @@ import { CoursesList } from '../../componentes/courses-list/courses-list';
 export class CoursesComponent {
 
 
-  courses$: Observable<Course[]>;
+  courses$: Observable<Course[]> | null = null;
 
   loading = true;
 
@@ -38,8 +40,13 @@ export class CoursesComponent {
     private coursesServices: CoursesServices,
     private router: Router,
     private route: ActivatedRoute,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
+    this.refresh();
+  }
+
+  refresh() {
     this.courses$ = this.coursesServices.list().pipe(
       catchError(error => {
         this.onError('Erro ao carregar cursos.');
@@ -61,6 +68,20 @@ export class CoursesComponent {
 
   onEdit(course: Course) {
     this.router.navigate(['edit', course._id], { relativeTo: this.route });
+  }
+
+  onRemove(course: Course) {
+    this.coursesServices.remove(course._id).subscribe(
+      () => {
+        this.refresh();
+          this.snackBar.open("Curso removido com sucesso!", "X", { duration: 1000,
+            horizontalPosition: 'center',
+            verticalPosition: "top"
+           });
+      },
+      error => this.onError("Erro ao tentar remover curso")
+
+    );
   }
 }
 

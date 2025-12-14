@@ -4,7 +4,7 @@
 
 
  @if (courses$ | async; as cursos) {
-  <app-courses-list [courses]="cursos" (add)="onAdd()" (edit)="onEdit($event)"></app-courses-list>
+  <app-courses-list [courses]="cursos" (add)="onAdd()" (edit)="onEdit($event)" (remove)="onRemove($event)"></app-courses-list>
 
 } @else () {
    <div class="mat-spinner">
