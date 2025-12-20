@@ -13,25 +13,16 @@ import { ErrorDialog } from '../../../shared/components/error-dialog/error-dialo
 import { MatIconModule } from '@angular/material/icon';
 import { CoursesList } from '../../componentes/courses-list/courses-list';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-
+import { ConfirmationDialog } from '../../../shared/components/confirmation-dialog/confirmation-dialog';
 
 @Component({
   selector: 'app-courses',
   standalone: true,
-  imports: [
-    CommonModule,
-    SharedModule,
-    MatIconModule,
-    CoursesList
-],
+  imports: [CommonModule, SharedModule, MatIconModule, CoursesList],
   templateUrl: './courses.html',
   styleUrls: ['./courses.scss'],
 })
-
 export class CoursesComponent {
-
-
   courses$: Observable<Course[]> | null = null;
 
   loading = true;
@@ -48,9 +39,9 @@ export class CoursesComponent {
 
   refresh() {
     this.courses$ = this.coursesServices.list().pipe(
-      catchError(error => {
+      catchError((error) => {
         this.onError('Erro ao carregar cursos.');
-        return of([])
+        return of([]);
       })
     );
   }
@@ -58,7 +49,7 @@ export class CoursesComponent {
   onError(errorMsg: string) {
     this.dialog.open(ErrorDialog, {
       // É aqui que passamos os dados para o Dialog:
-      data: errorMsg
+      data: errorMsg,
     });
   }
 
@@ -71,17 +62,24 @@ export class CoursesComponent {
   }
 
   onRemove(course: Course) {
-    this.coursesServices.remove(course._id).subscribe(
-      () => {
-        this.refresh();
-          this.snackBar.open("Curso removido com sucesso!", "X", { duration: 1000,
-            horizontalPosition: 'center',
-            verticalPosition: "top"
-           });
-      },
-      error => this.onError("Erro ao tentar remover curso")
+    const dialogRef = this.dialog.open(ConfirmationDialog, {
+      data: 'Tem certeza que deseja remover esse curso?',
+    });
 
-    );
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.coursesServices.remove(course._id).subscribe(
+          () => {
+            this.refresh();
+            this.snackBar.open('Curso removido com sucesso!', 'X', {
+              duration: 1000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+            });
+          },
+          (error) => this.onError('Erro ao tentar remover curso')
+        );
+      }
+    });
   }
 }
-
